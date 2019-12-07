@@ -5,6 +5,7 @@ def process_samples(file, k):
     edges = []
     with open(file) as input:
         for line in input:
+            line = line.strip()
             vertices, edges = graph_euler(line, k)
 
     return vertices, edges
