@@ -6,10 +6,14 @@ def process_samples(file, k):
     kmers = set()
     kmers_repeats = []
     with open(file) as input:
+        #Each line here is a random read
         for line in input:
             line = line.strip()
+
+            # Finding all k-mers from that read and making a non-unique []
             for i in range(len(line)-k+1):
                 kmers_repeats.append(line[i:i+k])
+                
         vertices, edges = graph_euler(kmers_repeats, k)
 
     return vertices, edges
