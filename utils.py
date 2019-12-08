@@ -3,50 +3,44 @@
 def process_samples(file, k):
     vertices = {}
     edges = []
+    kmers = set()
+    kmers_repeats = []
     with open(file) as input:
         for line in input:
             line = line.strip()
-            vertices, edges = graph_euler(line, k)
-
-    return vertices, edges
-
-
-
-# GET vertices, edges for Hamiltonian path
-def graph_hamiltonian(reads, k):
-    kmers = set([reads[i:i+k] for i in range(len(reads)-k+1)])
-    nodes = kmers
-    vertices = {}
-
-    for i,node in enumerate(nodes):
-        vertices[node] = i
-
-    edges = []
-
-    for s in nodes:
-        for d in nodes:
-            if (s[1:k] == d[0:k-1]):
-                e = [vertices[s], vertices[d]]
-                edges.append(e)
+            for i in range(len(line)-k+1):
+                kmers_repeats.append(line[i:i+k])
+        vertices, edges = graph_euler(kmers_repeats, k)
 
     return vertices, edges
 
 
 # Get vertices and edges for euler path
-def graph_euler(reads, k):
-    kmers = set([reads[i:i+k] for i in range(len(reads)-k+1)])
-    nodes = sorted(set([kmer[:k-1] for kmer in kmers] + [kmer[1:k] for kmer in kmers]))
+def graph_euler(kmers_repeats,k):
+    #print(kmers_repeats)
 
-    #print(kmers)
+    # Choosing all unique k-1 mers to be the nodes in the graph
+    nodes = []
+    for k1 in kmers_repeats:
+        prefix = k1[:k-1]
+        suffix = k1[1:k]
+
+        nodes.append(prefix)
+        nodes.append(suffix)
+    nodes = sorted(set(nodes))
 
     vertices = {}
     edges = []
+
+
+    # Numeric labels for nodes for easy graph traversal
     for i,node in enumerate(nodes):
         vertices[node] = i
-
-
-    for kmer in kmers:
-        e = [vertices[kmer[:k-1]],vertices[kmer[1:k]]]
-        edges.append(e)
+        
+    # Adding the kmer as the edge for the graph between suffix and prefix nodes
+    for kmer1 in kmers_repeats:
+        start = kmer1[:k-1]
+        end = kmer1[1:k]
+        edges.append([vertices[start], vertices[end]])
 
     return vertices, edges
