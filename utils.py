@@ -90,7 +90,7 @@ def graph_euler(kmers_repeats,k):
     for i,node in enumerate(nodes):
         vertices[node] = i
 
-    print(vertices)
+    #print(vertices)
         
     # Adding the kmer as the edge for the graph between suffix and prefix nodes
     for kmer1 in kmers_repeats:
