@@ -92,7 +92,7 @@ def main():
     text = "".join(text)
     text = text.replace('_', '')
 
-    samples = fragment(text, 30, 0, 0)
+    samples = fragment(text, 30, 50, 0.3)
 
     if args.randomize:
         samples2 = []
